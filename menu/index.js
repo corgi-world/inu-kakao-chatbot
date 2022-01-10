@@ -1,0 +1,42 @@
+import axios from "axios";
+import { parse } from "node-html-parser";
+
+export const updateMenu = async () => {
+  const url =
+    "https://www.inu.ac.kr/com/cop/mainWork/foodList1.do?siteId=inu&id=inu_050110010000";
+  const html = await axios.get(url);
+  const root = parse(html.data);
+
+  const headText = root.querySelector(".sickdangmenu dt").firstChild._rawText;
+  const check = headText === "조식";
+  if (!check) return headText;
+
+  const arr = root.querySelectorAll(".sickdangmenu dl");
+  let text =
+    arr[1].childNodes[1].firstChild._rawText +
+    "\n" +
+    arr[1].childNodes[3].childNodes[1]._rawText.split(" ")[0] +
+    arr[2].childNodes[1].firstChild._rawText +
+    "\n" +
+    arr[2].childNodes[3].childNodes[1]._rawText.split(" ")[0] +
+    arr[3].childNodes[1].firstChild._rawText +
+    "\n" +
+    arr[3].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+
+  const filtered_arr = text.split("\n").filter((t) => {
+    if (t !== "" && t !== " ") return t;
+  });
+
+  text = "";
+  filtered_arr.forEach((t) => {
+    text += t + "\n";
+    if (t.includes("*")) {
+      text += "\n";
+    }
+  });
+
+  text = text.slice(0, -2);
+  console.log(text);
+
+  return text;
+};
