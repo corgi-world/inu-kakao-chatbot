@@ -1,10 +1,13 @@
 import { updateCovid } from "./covid/index.js";
+import { updateBus } from "./bus/index.js";
 
 let nowHours = -1;
 
 let needCovidUpdate = false;
 let covidText = "";
+
 // need ~~~ update
+let busText = "";
 // need ~~~ update
 
 const checkTime = () => {
@@ -48,6 +51,8 @@ import { parse } from "node-html-parser";
   /*
     버스
   */
+
+  busText = await updateBus();
 })();
 
 setInterval(async () => {
