@@ -5,7 +5,11 @@ export const xmlToTxt = {
   busArrivalList: (xml) => {
     const parser = new XMLParser();
     const obj = parser.parse(xml.data);
-    // 버스 끊겼을 때 확인
+    const totalCount = obj.ServiceResult.msgHeader.totalCount;
+    if (totalCount === 0) {
+      return "도착정보 없음";
+    }
+
     const items = obj.ServiceResult.msgBody.itemList;
 
     const result = {};
@@ -13,7 +17,8 @@ export const xmlToTxt = {
       result[item.ROUTEID] = item;
     });
 
-    return objToTxt.busArrivalList(result);
+    const text = objToTxt.busArrivalList(result);
+    return text;
   },
 };
 
