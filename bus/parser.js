@@ -5,9 +5,14 @@ export const xmlToTxt = {
   busArrivalList: (xml) => {
     const parser = new XMLParser();
     const obj = parser.parse(xml.data);
-    const totalCount = obj.ServiceResult.msgHeader.totalCount;
-    if (totalCount === 0) {
-      return "도착정보 없음";
+
+    try {
+      const totalCount = obj.ServiceResult.msgHeader.totalCount;
+      if (totalCount === 0) {
+        return "도착정보 없음";
+      }
+    } catch {
+      return null;
     }
 
     const items = obj.ServiceResult.msgBody.itemList;
@@ -38,6 +43,7 @@ const objToTxt = {
       }
     });
 
+    text = text.slice(0, -1);
     return text;
   },
 };

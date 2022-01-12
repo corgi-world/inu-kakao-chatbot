@@ -1,14 +1,17 @@
 import { updateCovid } from "./covid/index.js";
 import { updateBus } from "./bus/index.js";
+import { updateMenu } from "./menu/index.js";
 
 let nowHours = -1;
 
 let needCovidUpdate = false;
 let covidText = "";
 
-// need ~~~ update
+let needBusUpdate = false;
 let busText = "";
-// need ~~~ update
+
+let needMenuUpdate = false;
+let menuText = "";
 
 const checkTime = () => {
   const date = new Date();
@@ -20,11 +23,18 @@ const checkTime = () => {
     if (nowHours === 9) {
       needCovidUpdate = true;
     }
+    if (0 <= nowHours && nowHours <= 5) {
+      needBusUpdate = false;
+    } else {
+      needBusUpdate = true;
+    }
+    if (nowHours === 6) {
+      needMenuUpdate = true;
+    } else {
+      needMenuUpdate = false;
+    }
   }
 };
-
-import axios from "axios";
-import { parse } from "node-html-parser";
 
 (async () => {
   /*
@@ -39,32 +49,45 @@ import { parse } from "node-html-parser";
   needCovidUpdate = true;
 
   /*
-    학식
-  */
-
-  // const url =
-  //   "https://www.inu.ac.kr/com/cop/mainWork/foodList1.do?siteId=inu&id=inu_050110010000";
-  // const html = await axios.get(url);
-  // const root = parse(html.data);
-  // console.log(root.querySelector(".sickdangmenu dt").firstChild._rawText);
-
-  /*
     버스
   */
 
   busText = await updateBus();
+  needBusUpdate = true;
+
+  /*
+    학식
+  */
+
+  menuText = await updateMenu();
 })();
 
 setInterval(async () => {
   checkTime();
   if (needCovidUpdate) {
-    let r = await updateCovid(-1);
+    const r = await updateCovid(-1);
     if (r !== null) {
       covidText = r;
       needCovidUpdate = false;
     }
   }
-}, 100000);
+  if (needMenuUpdate) {
+    const r = await updateMenu();
+    if (r !== null) {
+      menuText = r;
+      needMenuUpdate = false;
+    }
+  }
+}, 300000);
+
+setInterval(async () => {
+  if (needBusUpdate) {
+    const r = await updateBus();
+    if (r !== null) {
+      busText = r;
+    }
+  }
+}, 20000);
 
 // KAKAO I OPEN BUILDER //
 
@@ -74,7 +97,7 @@ import bodyParser from "body-parser";
 
 app.use(bodyParser.json());
 
-app.post("/msw", function (req, res) {
+app.post("/covid", function (req, res) {
   const responseBody = {
     version: "2.0",
     template: {
@@ -90,14 +113,30 @@ app.post("/msw", function (req, res) {
 
   res.status(200).send(responseBody);
 });
-app.get("/msw", function (req, res) {
+app.post("/bus", function (req, res) {
   const responseBody = {
     version: "2.0",
     template: {
       outputs: [
         {
           simpleText: {
-            text: covidText,
+            text: busText,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+app.post("/menu", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: menuText,
           },
         },
       ],
@@ -109,6 +148,59 @@ app.get("/msw", function (req, res) {
 
 app.get("/", function (req, res) {
   res.send("msw");
+});
+
+/*
+  배포 테스트
+*/
+
+app.get("/covid", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: covidText,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+app.get("/bus", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: busText,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+app.get("/menu", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: menuText,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
 });
 
 app.listen(3000, function () {});
