@@ -1,6 +1,7 @@
 import { updateCovid } from "./covid/index.js";
 import { updateBus } from "./bus/index.js";
 import { updateMenu } from "./menu/index.js";
+import { updatePath } from "./pathConfirmed/index.js";
 
 let nowHours = -1;
 
@@ -13,6 +14,9 @@ let busText = "";
 let needMenuUpdate = false;
 let menuText = "";
 
+let needPathUpdate = false;
+let pathText = "";
+
 const checkTime = () => {
   const date = new Date();
   const hours = date.getHours();
@@ -23,12 +27,14 @@ const checkTime = () => {
     if (nowHours === 9) {
       needCovidUpdate = true;
     }
-    if (0 <= nowHours && nowHours <= 5) {
+    if (0 <= nowHours && nowHours <= 6) {
       needBusUpdate = false;
+      needPathUpdate = false;
     } else {
       needBusUpdate = true;
+      needPathUpdate = true;
     }
-    if (nowHours === 6) {
+    if (nowHours === 7) {
       needMenuUpdate = true;
     } else {
       needMenuUpdate = false;
@@ -60,15 +66,27 @@ const checkTime = () => {
   */
 
   menuText = await updateMenu();
+
+  /*
+    확진자 동선
+  */
+
+  pathText = await updatePath();
 })();
 
+// 5분
 setInterval(async () => {
-  checkTime();
   if (needCovidUpdate) {
     const r = await updateCovid(-1);
+    console.log(r);
     if (r !== null) {
       covidText = r;
       needCovidUpdate = false;
+    } else {
+      // covidText = "확진자 수 에러";
+      /* 
+        실시간 갱신이 아닌 데이터들은 에러가 나도 전 날 데이터 보여주는게 나은 듯
+      */
     }
   }
   if (needMenuUpdate) {
@@ -76,18 +94,36 @@ setInterval(async () => {
     if (r !== null) {
       menuText = r;
       needMenuUpdate = false;
+    } else {
+      // menuText = "학식 에러";
     }
   }
 }, 300000);
 
+// 20초
 setInterval(async () => {
   if (needBusUpdate) {
     const r = await updateBus();
     if (r !== null) {
       busText = r;
+    } else {
+      busText = "버스 에러";
     }
   }
 }, 20000);
+
+// 1분
+setInterval(async () => {
+  checkTime();
+  if (needPathUpdate) {
+    const r = await updatePath();
+    if (r !== null) {
+      pathText = r;
+    } else {
+      pathText = "확진자 동선 에러";
+    }
+  }
+}, 60000);
 
 // KAKAO I OPEN BUILDER //
 
@@ -97,7 +133,7 @@ import bodyParser from "body-parser";
 
 app.use(bodyParser.json());
 
-app.post("/covid", function (req, res) {
+app.all("/covid", function (req, res) {
   const responseBody = {
     version: "2.0",
     template: {
@@ -113,7 +149,7 @@ app.post("/covid", function (req, res) {
 
   res.status(200).send(responseBody);
 });
-app.post("/bus", function (req, res) {
+app.all("/bus", function (req, res) {
   const responseBody = {
     version: "2.0",
     template: {
@@ -129,7 +165,7 @@ app.post("/bus", function (req, res) {
 
   res.status(200).send(responseBody);
 });
-app.post("/menu", function (req, res) {
+app.all("/menu", function (req, res) {
   const responseBody = {
     version: "2.0",
     template: {
@@ -142,65 +178,42 @@ app.post("/menu", function (req, res) {
       ],
     },
   };
+
+  res.status(200).send(responseBody);
+});
+app.all("/path", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [],
+    },
+  };
+  const text = {
+    simpleText: {
+      text: pathText,
+    },
+  };
+  const image = {
+    simpleImage: {
+      imageUrl: pathText,
+      altText: "동선",
+    },
+  };
+
+  const {
+    template: { outputs },
+  } = responseBody;
+  if (pathText === null || pathText.includes("에러")) {
+    outputs[0] = text;
+  } else {
+    outputs[0] = image;
+  }
 
   res.status(200).send(responseBody);
 });
 
 app.get("/", function (req, res) {
   res.send("msw");
-});
-
-/*
-  배포 테스트
-*/
-
-app.get("/covid", function (req, res) {
-  const responseBody = {
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: covidText,
-          },
-        },
-      ],
-    },
-  };
-
-  res.status(200).send(responseBody);
-});
-app.get("/bus", function (req, res) {
-  const responseBody = {
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: busText,
-          },
-        },
-      ],
-    },
-  };
-
-  res.status(200).send(responseBody);
-});
-app.get("/menu", function (req, res) {
-  const responseBody = {
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: menuText,
-          },
-        },
-      ],
-    },
-  };
-
-  res.status(200).send(responseBody);
 });
 
 app.listen(3000, function () {});
