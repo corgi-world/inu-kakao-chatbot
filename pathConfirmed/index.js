@@ -19,6 +19,12 @@ export const updatePath = async () => {
     const image_attr = image_root.querySelector(".bdViewCont").childNodes[1].rawAttrs;
 
     text = image_attr.split('"')[1];
+    if (text[0] === "h") {
+      // 이미지 경로가 절대경로일 때가 있고 상대경로일 때가 있음;;
+    } else {
+      text = "https://inu.ac.kr" + text;
+    }
+
     return text;
   } catch {
     return null;
