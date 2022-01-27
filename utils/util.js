@@ -1,4 +1,4 @@
-export const getTodayString = () => {
+export const getTodayString = (useHour) => {
   const date = new Date();
   let month = date.getMonth() + 1;
   let day = date.getDate();
@@ -12,17 +12,21 @@ export const getTodayString = () => {
   minute = minute >= 10 ? minute : "0" + minute;
   second = second >= 10 ? second : "0" + second;
 
-  return (
-    date.getFullYear() +
-    "-" +
-    month +
-    "-" +
-    day +
-    " " +
-    hour +
-    ":" +
-    minute +
-    ":" +
-    second
-  );
+  if (useHour) {
+    return (
+      date.getFullYear() +
+      "-" +
+      month +
+      "-" +
+      day +
+      " " +
+      hour +
+      ":" +
+      minute +
+      ":" +
+      second
+    );
+  } else {
+    return date.getFullYear() + "-" + month + "-" + day;
+  }
 };

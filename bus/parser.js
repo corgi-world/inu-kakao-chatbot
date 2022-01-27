@@ -9,7 +9,7 @@ export const xmlToTxt = {
     try {
       const totalCount = obj.ServiceResult.msgHeader.totalCount;
       if (totalCount === 0) {
-        return "도착정보 없음";
+        return getTodayString(true) + "\n" + "도착정보 없음";
       }
     } catch {
       return null;
@@ -31,7 +31,8 @@ const objToTxt = {
   busArrivalList: (obj) => {
     const sortedArr = sortObjBySec(obj);
 
-    let text = getTodayString() + "\n";
+    const dateText = getTodayString(true);
+    let text = dateText + "\n";
     sortedArr.forEach((bus) => {
       const busID = bus[0];
       if (busID in busNameObj) {
@@ -42,6 +43,10 @@ const objToTxt = {
         text += v.LATEST_STOP_NAME + " 출발\n";
       }
     });
+
+    if (text === dateText + "\n") {
+      return text + "도착정보 없음";
+    }
 
     text = text.slice(0, -1);
     return text;

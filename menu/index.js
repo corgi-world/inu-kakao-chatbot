@@ -1,11 +1,12 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
+import { getTodayString } from "../utils/util.js";
 
 export const updateMenu = async () => {
   const url =
     "https://www.inu.ac.kr/com/cop/mainWork/foodList1.do?siteId=inu&id=inu_050110010000";
 
-  let text = "";
+  let text = getTodayString(false) + "\n";
   try {
     const html = await axios.get(url);
     const root = parse(html.data);
@@ -15,7 +16,7 @@ export const updateMenu = async () => {
     if (!check) return headText;
 
     const arr = root.querySelectorAll(".sickdangmenu dl");
-    text =
+    text +=
       arr[1].childNodes[1].firstChild._rawText +
       "\n" +
       arr[1].childNodes[3].childNodes[1]._rawText.split(" ")[0] +
