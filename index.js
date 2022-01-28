@@ -27,11 +27,14 @@ const checkTime = () => {
     if (nowHours === 9) {
       needCovidUpdate = true;
     }
-    if (0 <= nowHours && nowHours <= 6) {
+    if (1 <= nowHours && nowHours <= 6) {
       needBusUpdate = false;
-      needPathUpdate = false;
     } else {
       needBusUpdate = true;
+    }
+    if (0 <= nowHours && nowHours <= 6) {
+      needPathUpdate = false;
+    } else {
       needPathUpdate = true;
     }
     if (nowHours === 7) {
