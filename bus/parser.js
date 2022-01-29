@@ -39,7 +39,13 @@ const objToTxt = {
         const v = bus[1];
         text += "\n" + busNameObj[busID] + " 버스\n";
         text += v.REST_STOP_COUNT + "개 전, ";
-        text += secToMinute(v.ARRIVALESTIMATETIME) + "\n";
+
+        if (v.REST_STOP_COUNT == 1 && v.ARRIVALESTIMATETIME <= 210) {
+          text += "곧 도착\n";
+        } else {
+          text += secToMinute(v.ARRIVALESTIMATETIME) + "\n";
+        }
+
         text += v.LATEST_STOP_NAME + " 출발\n";
       }
     });
@@ -74,9 +80,8 @@ const secToMinute = (sec) => {
   const m = parseInt(sec / 60);
   const s = sec % 60;
 
-  if (90 < sec) {
-    return `${m}분 ${s}초`;
-  } else return "곧 도착";
+  // 초를 보여주는건 오히려 위험할 듯
+  return `${m}분 전`;
 };
 
 const busNameObj = {
