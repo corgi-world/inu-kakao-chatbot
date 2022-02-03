@@ -81,7 +81,7 @@ const checkTime = () => {
 setInterval(async () => {
   if (needCovidUpdate) {
     const r = await updateCovid(-1);
-    console.log(r);
+
     if (r !== null) {
       covidText = r;
       needCovidUpdate = false;
@@ -103,7 +103,7 @@ setInterval(async () => {
   }
 }, 300000);
 
-// 20초
+// 10초
 setInterval(async () => {
   if (needBusUpdate) {
     const r = await updateBus();
@@ -113,7 +113,7 @@ setInterval(async () => {
       busText = "버스 에러";
     }
   }
-}, 20000);
+}, 10000);
 
 // 1분
 setInterval(async () => {
@@ -185,6 +185,9 @@ app.all("/menu", function (req, res) {
   res.status(200).send(responseBody);
 });
 app.all("/path", function (req, res) {
+  const url =
+    "http://www.inu.ac.kr/user/boardList.do?boardId=648880&siteId=inu&id=inu_070213030000";
+
   const responseBody = {
     version: "2.0",
     template: {
@@ -193,7 +196,7 @@ app.all("/path", function (req, res) {
   };
   const text = {
     simpleText: {
-      text: pathText,
+      text: url,
     },
   };
   const image = {
@@ -210,6 +213,7 @@ app.all("/path", function (req, res) {
     outputs[0] = text;
   } else {
     outputs[0] = image;
+    outputs[1] = text;
   }
 
   res.status(200).send(responseBody);
