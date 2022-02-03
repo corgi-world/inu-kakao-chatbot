@@ -30,12 +30,15 @@ export const updateMenu = async () => {
 
     text +=
       lunch1Title +
+      "\n" +
       lunch1 +
       "\n" +
       lunch2Title +
+      "\n" +
       lunch2 +
       "\n" +
       dinnerTitle +
+      "\n" +
       dinner +
       "\n";
   } catch {
