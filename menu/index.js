@@ -6,26 +6,38 @@ export const updateMenu = async () => {
   const url =
     "https://www.inu.ac.kr/com/cop/mainWork/foodList1.do?siteId=inu&id=inu_050110010000";
 
-  let text = getTodayString(false) + "\n";
+  let text = "";
   try {
     const html = await axios.get(url);
     const root = parse(html.data);
 
     const headText = root.querySelector(".sickdangmenu dt").firstChild._rawText;
-    const check = headText === "조식";
-    if (!check) return headText;
+    const check = headText === "조식"; // 오늘은 등록된 메뉴가 없습니다.
+    if (!check) return "오늘은 등록된 메뉴가 없습니다.";
 
     const arr = root.querySelectorAll(".sickdangmenu dl");
+
+    const lunch1Title = arr[1].childNodes[1].firstChild._rawText;
+    const lunch2Title = arr[2].childNodes[1].firstChild._rawText;
+    const dinnerTitle = arr[3].childNodes[1].firstChild._rawText;
+    const lunch1 = arr[1].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+    const lunch2 = arr[2].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+    const dinner = arr[3].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+
+    if (lunch1 === "\n" && lunch2 === "\n" && dinner === "\n") {
+      return "오늘은 등록된 메뉴가 없습니다.";
+    }
+
     text +=
-      arr[1].childNodes[1].firstChild._rawText +
+      lunch1Title +
+      lunch1 +
       "\n" +
-      arr[1].childNodes[3].childNodes[1]._rawText.split(" ")[0] +
-      arr[2].childNodes[1].firstChild._rawText +
+      lunch2Title +
+      lunch2 +
       "\n" +
-      arr[2].childNodes[3].childNodes[1]._rawText.split(" ")[0] +
-      arr[3].childNodes[1].firstChild._rawText +
-      "\n" +
-      arr[3].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+      dinnerTitle +
+      dinner +
+      "\n";
   } catch {
     return null;
   }
@@ -34,10 +46,11 @@ export const updateMenu = async () => {
     if (t !== "" && t !== " ") return t;
   });
 
-  text = "";
+  text = getTodayString(false) + "\n\n";
   filtered_arr.forEach((t) => {
     text += t + "\n";
-    if (t.includes("*")) {
+    if (t.includes(":")) {
+      // : 는 맨 마지막 시간 정보
       text += "\n";
     }
   });
