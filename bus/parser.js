@@ -37,7 +37,7 @@ const objToTxt = {
       const busID = bus[0];
       if (busID in busNameObj) {
         const v = bus[1];
-        text += "\n" + busNameObj[busID] + " 버스\n";
+        text += "\n" + busNameObj[busID] + "\n";
         text += v.REST_STOP_COUNT + "개 전, ";
 
         if (v.REST_STOP_COUNT == 1 && v.ARRIVALESTIMATETIME <= 210) {
@@ -85,10 +85,10 @@ const secToMinute = (sec) => {
 };
 
 const busNameObj = {
-  165000012: "8번",
-  165000020: "16번",
-  164000001: "98번",
-  161000008: "급행99번",
-  161000007: "58번",
-  213000019: "3002번",
+  165000012: "8번 버스\n(정문, 자연과학대학, 공과대학)",
+  165000020: "16번 버스\n(정문)",
+  164000001: "98번 버스\n(정문, 자연과학대학, 공과대학)",
+  161000008: "급행99번 버스\n(정문)",
+  161000007: "58번 버스\n(정문)",
+  213000019: "3002번 버스\n(정문, 자연과학대학, 공과대학)",
 };

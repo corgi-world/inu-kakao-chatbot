@@ -103,7 +103,7 @@ setInterval(async () => {
   }
 }, 300000);
 
-// 10초
+// 20초
 setInterval(async () => {
   if (needBusUpdate) {
     const r = await updateBus();
@@ -113,7 +113,7 @@ setInterval(async () => {
       busText = "버스 에러";
     }
   }
-}, 10000);
+}, 20000);
 
 // 1분
 setInterval(async () => {
