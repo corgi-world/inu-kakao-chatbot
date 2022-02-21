@@ -30,7 +30,9 @@ const checkTime = () => {
       needCovidUpdate = true;
     }
 
-    if (20 <= nowHours && nowHours <= 8) {
+    if (20 < nowHours || nowHours < 8) {
+      busCallCount = 0;
+
       needBusUpdate = false;
       busText =
         "공공데이터 버스 도착정보 조회 일일 트래픽 제한으로 08시부터 20시 59분까지만 사용 가능합니다.";
