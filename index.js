@@ -9,7 +9,9 @@ let needCovidUpdate = false;
 let covidText = "";
 
 let needBusUpdate = false;
+let busHotTime = false;
 let busText = "";
+let busCallCount = 1;
 
 let needMenuUpdate = false;
 let menuText = "";
@@ -27,9 +29,25 @@ const checkTime = () => {
     if (nowHours === 9) {
       needCovidUpdate = true;
     }
-    if (1 <= nowHours && nowHours <= 6) {
+
+    if (20 <= nowHours && nowHours <= 8) {
       needBusUpdate = false;
+      busText =
+        "공공데이터 버스 도착정보 조회 일일 트래픽 제한으로 08시부터 20시 59분까지만 사용 가능합니다.";
     } else {
+      // 오전 8시 ~ 오후 9시
+      const busHotTimeStart = new Date();
+      const busHotTimeEnd = new Date();
+      busHotTimeStart.setHours(8);
+      busHotTimeStart.setMinutes(0);
+      busHotTimeEnd.setHours(10);
+      busHotTimeEnd.setMinutes(0);
+
+      if (busHotTimeStart <= date && date <= busHotTimeEnd) {
+        busHotTime = true;
+      } else {
+        busHotTime = false;
+      }
       needBusUpdate = true;
     }
     if (0 <= nowHours && nowHours <= 6) {
@@ -103,15 +121,28 @@ setInterval(async () => {
   }
 }, 300000);
 
-// 20초
-setInterval(async () => {
+const setBusText = async () => {
   if (needBusUpdate) {
     const r = await updateBus();
     if (r !== null) {
       busText = r;
+      busCallCount += 1;
     } else {
       busText = "버스 에러";
     }
+  }
+};
+
+// 15초
+setInterval(() => {
+  if (busHotTime) {
+    setBusText();
+  }
+}, 15000);
+// 20초
+setInterval(() => {
+  if (!busHotTime) {
+    setBusText();
   }
 }, 20000);
 
@@ -220,7 +251,7 @@ app.all("/path", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  res.send("msw");
+  res.send("msw : " + busCallCount);
 });
 
 app.listen(3000, function () {});
