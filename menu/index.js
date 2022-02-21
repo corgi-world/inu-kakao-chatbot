@@ -20,9 +20,9 @@ export const updateMenu = async () => {
     const lunch1Title = arr[1].childNodes[1].firstChild._rawText;
     const lunch2Title = arr[2].childNodes[1].firstChild._rawText;
     const dinnerTitle = arr[3].childNodes[1].firstChild._rawText;
-    const lunch1 = arr[1].childNodes[3].childNodes[1]._rawText.split(" ")[0];
-    const lunch2 = arr[2].childNodes[3].childNodes[1]._rawText.split(" ")[0];
-    const dinner = arr[3].childNodes[3].childNodes[1]._rawText.split(" ")[0];
+    const lunch1 = arr[1].childNodes[3].childNodes[1]._rawText;
+    const lunch2 = arr[2].childNodes[3].childNodes[1]._rawText;
+    const dinner = arr[3].childNodes[3].childNodes[1]._rawText;
 
     if (lunch1 === "\n" && lunch2 === "\n" && dinner === "\n") {
       return "오늘은 등록된 메뉴가 없습니다.";
@@ -60,5 +60,7 @@ export const updateMenu = async () => {
 
   text = text.slice(0, -2);
   text = text.replace(/&amp;/gi, "&");
+
+  console.log(text);
   return text;
 };
