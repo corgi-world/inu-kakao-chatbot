@@ -165,9 +165,11 @@ setInterval(async () => {
 
 import express from "express";
 const app = express();
-import bodyParser from "body-parser";
 
+import bodyParser from "body-parser";
 app.use(bodyParser.json());
+
+app.use("/images", express.static("images"));
 
 app.all("/covid", function (req, res) {
   const responseBody = {
@@ -251,9 +253,34 @@ app.all("/path", function (req, res) {
 
   res.status(200).send(responseBody);
 });
+app.all("/map", function (req, res) {
+  const url = "http://54.180.114.46:3000/images/";
+  // const url = "http://127.0.0.1:3000/images/";
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleImage: {
+            imageUrl: url + "map_info.png",
+            altText: "강의실",
+          },
+        },
+        {
+          simpleImage: {
+            imageUrl: url + "map.png",
+            altText: "지도",
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
 
 app.get("/", function (req, res) {
-  res.send("msw : " + busCallCount);
+  res.send("msw : " + busCallCount + " " + busHotTime);
 });
 
 app.listen(3000, function () {});
