@@ -2,6 +2,7 @@ import { updateCovid } from "./covid/index.js";
 import { updateBus } from "./bus/index.js";
 import { updateMenu } from "./menu/index.js";
 import { updatePath } from "./pathConfirmed/index.js";
+import { IMAGEPATH, IMAGEURL, pathConfirmedImageName } from "./utils/util.js";
 
 let nowHours = -1;
 
@@ -17,7 +18,7 @@ let needMenuUpdate = false;
 let menuText = "";
 
 let needPathUpdate = false;
-let pathText = "";
+let latestPathConfirmed = "";
 
 const checkTime = () => {
   const date = new Date();
@@ -94,7 +95,7 @@ const checkTime = () => {
     확진자 동선
   */
 
-  pathText = await updatePath();
+  latestPathConfirmed = await updatePath();
 })();
 
 // 5분
@@ -152,11 +153,9 @@ setInterval(() => {
 setInterval(async () => {
   checkTime();
   if (needPathUpdate) {
-    const r = await updatePath();
+    const r = await updatePath(latestPathConfirmed);
     if (r !== null) {
-      pathText = r;
-    } else {
-      pathText = "확진자 동선 에러";
+      latestPathConfirmed = r;
     }
   }
 }, 60000);
@@ -169,6 +168,7 @@ const app = express();
 import bodyParser from "body-parser";
 app.use(bodyParser.json());
 
+import fs from "fs";
 app.use("/images", express.static("images"));
 
 app.all("/covid", function (req, res) {
@@ -220,7 +220,7 @@ app.all("/menu", function (req, res) {
   res.status(200).send(responseBody);
 });
 app.all("/path", function (req, res) {
-  const url =
+  const inu_url =
     "http://www.inu.ac.kr/user/boardList.do?boardId=648880&siteId=inu&id=inu_070213030000";
 
   const responseBody = {
@@ -229,46 +229,46 @@ app.all("/path", function (req, res) {
       outputs: [],
     },
   };
-  const text = {
-    simpleText: {
-      text: url,
-    },
-  };
-  const image = {
-    simpleImage: {
-      imageUrl: pathText,
-      altText: "동선",
-    },
-  };
 
   const {
     template: { outputs },
   } = responseBody;
-  if (pathText === null || pathText.includes("에러")) {
-    outputs[0] = text;
-  } else {
-    outputs[0] = image;
-    outputs[1] = text;
+
+  const text = {
+    simpleText: {
+      text: inu_url,
+    },
+  };
+
+  outputs[0] = text;
+
+  if (fs.existsSync(IMAGEPATH + pathConfirmedImageName)) {
+    const image = {
+      simpleImage: {
+        imageUrl: IMAGEURL + pathConfirmedImageName,
+        altText: "동선",
+      },
+    };
+
+    outputs[1] = image;
   }
 
   res.status(200).send(responseBody);
 });
 app.all("/map", function (req, res) {
-  const url = "http://54.180.114.46:3000/images/";
-  // const url = "http://127.0.0.1:3000/images/";
   const responseBody = {
     version: "2.0",
     template: {
       outputs: [
         {
           simpleImage: {
-            imageUrl: url + "map_info.png",
+            imageUrl: IMAGEURL + "map_info.png",
             altText: "강의실",
           },
         },
         {
           simpleImage: {
-            imageUrl: url + "map.png",
+            imageUrl: IMAGEURL + "map.png",
             altText: "지도",
           },
         },

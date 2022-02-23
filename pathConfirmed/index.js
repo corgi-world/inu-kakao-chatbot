@@ -1,7 +1,9 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
+import download from "image-downloader";
+import { IMAGEPATH, pathConfirmedImageName } from "../utils/util.js";
 
-export const updatePath = async () => {
+export const updatePath = async (prev) => {
   let text = "";
   try {
     const raw_url = "https://www.inu.ac.kr/user/";
@@ -19,10 +21,18 @@ export const updatePath = async () => {
     const image_attr = image_root.querySelector(".bdViewCont").childNodes[1].rawAttrs;
 
     text = image_attr.split('"')[1];
-    if (text[0] === "h") {
-      // 이미지 경로가 절대경로일 때가 있고 상대경로일 때가 있음;;
+    if (text) {
+      if (text[0] === "h") {
+        // 이미지 경로가 절대경로일 때가 있고 상대경로일 때가 있음;;
+      } else {
+        text = "https://inu.ac.kr" + text;
+      }
     } else {
-      text = "https://inu.ac.kr" + text;
+      return null;
+    }
+
+    if (prev !== text) {
+      download.image({ url: text, dest: IMAGEPATH + pathConfirmedImageName });
     }
 
     return text;
