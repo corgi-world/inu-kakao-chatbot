@@ -7,7 +7,7 @@ export const xmlToObj = {
     let key = "";
     let str = "";
 
-    const totalCount = xml.data.response.body.totalCount;
+    const totalCount = xml.data.response?.body.totalCount;
     // 이틀치가 정상적으로 업데이트 되면 item의 개수가 38개여야 한다.
     // 경기...서울...부산...인천...등등 지역이 총 19개 * 이틀 = 38
     if (totalCount !== 38) {
