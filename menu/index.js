@@ -61,6 +61,5 @@ export const updateMenu = async () => {
   text = text.slice(0, -2);
   text = text.replace(/&amp;/gi, "&");
 
-  console.log(text);
   return text;
 };
