@@ -12,8 +12,21 @@ export const updatePath = async (prev) => {
     const html = await axios.get(url);
     const root = parse(html.data);
 
+    const numberArr = root.querySelectorAll(".no");
+
+    let officialIndex = 0;
+    for (let i = 0; i < numberArr.length; i++) {
+      if (numberArr[i].childNodes[1]?.rawTagName === "img") {
+        // 공지는 td에 img태그를 사용한다.
+      } else {
+        // 공지는 건너뛰고 가장 맨 앞 게시글
+        officialIndex = i;
+        break;
+      }
+    }
+
     const arr = root.querySelectorAll(".textAL");
-    const link = arr[0].childNodes[1].rawAttrs.split("'")[1];
+    const link = arr[officialIndex].childNodes[1].rawAttrs.split("'")[1];
 
     const image_url = (raw_url + link).replace(/&amp;/gi, "&");
     const image_html = await axios.get(image_url);
@@ -37,6 +50,7 @@ export const updatePath = async (prev) => {
 
     return text;
   } catch {
+    console.log("err");
     return null;
   }
 };
