@@ -24,7 +24,8 @@ export const updateMenu = async () => {
     const lunch2 = arr[2].childNodes[3].childNodes[1]._rawText;
     const dinner = arr[3].childNodes[3].childNodes[1]._rawText;
 
-    if (lunch1 === "\n" && lunch2 === "\n" && dinner === "\n") {
+    // 식단 정보가 "오늘은 등록된 메뉴가 없습니다."라고 표시될 때도 있고 그냥 비워져 있는 경우도 있음.
+    if (lunch1.trim() == "" && lunch2.trim() == "" && dinner.trim() == "") {
       return "오늘은 등록된 메뉴가 없습니다.";
     }
 
