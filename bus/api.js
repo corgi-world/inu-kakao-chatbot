@@ -13,6 +13,7 @@ const api = axios.create({
     numOfRows: "20",
     bstopId: "164000395",
   },
+  timeout: 2000,
 });
 
 export const call = {

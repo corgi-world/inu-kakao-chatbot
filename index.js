@@ -36,7 +36,7 @@ const checkTime = () => {
 
       needBusUpdate = false;
       busText =
-        "공공데이터 버스 도착정보 조회 일일 트래픽 제한으로 08시부터 20시 59분까지만 사용 가능합니다.";
+        "공공데이터 일일 트래픽 제한으로 08시부터 20시 59분까지만 사용 가능합니다.";
     } else {
       // 오전 8시 ~ 오후 9시
       const busHotTimeStart = new Date();
@@ -127,12 +127,8 @@ setInterval(async () => {
 const setBusText = async () => {
   if (needBusUpdate) {
     const r = await updateBus();
-    if (r !== null) {
-      busText = r;
-      busCallCount += 1;
-    } else {
-      busText = "버스 에러";
-    }
+    busText = r;
+    busCallCount += 1;
   }
 };
 

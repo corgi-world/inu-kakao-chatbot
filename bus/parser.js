@@ -3,27 +3,27 @@ import { getTodayString } from "../utils/util.js";
 
 export const xmlToTxt = {
   busArrivalList: (xml) => {
-    const parser = new XMLParser();
-    const obj = parser.parse(xml.data);
-
     try {
+      const parser = new XMLParser();
+      const obj = parser.parse(xml.data);
+
       const totalCount = obj.ServiceResult.msgHeader.totalCount;
       if (totalCount === 0) {
         return getTodayString(true) + "\n" + "도착정보 없음";
       }
+
+      const items = obj.ServiceResult.msgBody.itemList;
+
+      const result = {};
+      items.forEach((item) => {
+        result[item.ROUTEID] = item;
+      });
+
+      const text = objToTxt.busArrivalList(result);
+      return text;
     } catch {
-      return null;
+      return "bus parsing error";
     }
-
-    const items = obj.ServiceResult.msgBody.itemList;
-
-    const result = {};
-    items.forEach((item) => {
-      result[item.ROUTEID] = item;
-    });
-
-    const text = objToTxt.busArrivalList(result);
-    return text;
   },
 };
 
