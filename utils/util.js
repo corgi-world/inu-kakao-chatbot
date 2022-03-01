@@ -1,6 +1,9 @@
 import path from "path";
 const __dirname = path.resolve();
 
+export const API_KEY =
+  "dBXa3zczNeoLscWh/ON+qGePIwWOHteh9KrDrTkhsU3b75W0LgJBHyYOhxcP4A8epY7iuoBJjla5WMdzV6vDwg==";
+
 const serverURL = "http://54.180.114.46:3000";
 // const serverURL = "http://127.0.0.1:3000";
 

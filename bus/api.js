@@ -1,7 +1,7 @@
 import axios from "axios";
+import { API_KEY } from "../utils/util.js";
 
-const key =
-  "dBXa3zczNeoLscWh/ON+qGePIwWOHteh9KrDrTkhsU3b75W0LgJBHyYOhxcP4A8epY7iuoBJjla5WMdzV6vDwg==";
+const key = API_KEY;
 const endpoint = "http://apis.data.go.kr/6280000/busArrivalService/";
 const busArrivalList = "getAllRouteBusArrivalList";
 
