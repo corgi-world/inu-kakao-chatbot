@@ -2,7 +2,7 @@ import { updateCovid } from "./covid/index.js";
 import { updateBus } from "./bus/index.js";
 import { updateMenu } from "./menu/index.js";
 import { updatePath } from "./pathConfirmed/index.js";
-import getWeatherText from "./weather/index.js";
+import { getWeatherText, getCount } from "./weather/index.js";
 import { IMAGEPATH, IMAGEURL, pathConfirmedImageName } from "./utils/util.js";
 
 let nowHours = -1;
@@ -293,7 +293,7 @@ app.all("/weather", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  res.send("msw : " + busCallCount + " " + busHotTime);
+  res.send("msw : " + busCallCount + " " + busHotTime + " " + getCount());
 });
 
 app.listen(3000, function () {});
