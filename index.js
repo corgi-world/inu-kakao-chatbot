@@ -2,6 +2,7 @@ import { updateCovid } from "./covid/index.js";
 import { updateBus } from "./bus/index.js";
 import { updateMenu } from "./menu/index.js";
 import { updatePath } from "./pathConfirmed/index.js";
+import getWeatherText from "./weather/index.js";
 import { IMAGEPATH, IMAGEURL, pathConfirmedImageName } from "./utils/util.js";
 
 let nowHours = -1;
@@ -266,6 +267,22 @@ app.all("/map", function (req, res) {
           simpleImage: {
             imageUrl: IMAGEURL + "map.png",
             altText: "지도",
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+app.all("/weather", function (req, res) {
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: getWeatherText(),
           },
         },
       ],
