@@ -2,17 +2,14 @@
 
 ## 동작
 
-- <a href="http://pf.kakao.com/_pcjxnb">알콩달콩 인천대 사용해 보기</a>
-
-<img src="./preview.gif" width="70%" />
+<img src="./preview.gif" width="50%" />
 
 ## 인천대입구역 2번 출구 -> 인천대학교 버스 도착 정보
 
 - <a href="https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15059084">인천광역시\_도착정보 조회</a>
 
-- 07시 00분 ~ 00시 59분까지 20초 간격으로 갱신
-
-- 90초 미만은 "곧 도착"으로 표기
+- 08시 00분 ~ 10시 00분까지 15초 간격으로 갱신
+- 10시 01분 ~ 20시 59분까지 20초 간격으로 갱신
 
 - 인천대입구역 2번 출구 버스정류장 정보
 
@@ -49,8 +46,25 @@
 
 - 학교 측에서 동선 정보를 이미지 파일로 업로드하여 이를 그대로 전달
 
+## 날씨
+
+- <a href="https://www.data.go.kr/data/15084084/openapi.do">기상청\_단기예보 ((구)\_동네예보) 조회서비스</a>
+
+  - 단기예보조회 (강수확률)
+  - 초단기예보조회 (기온, 하늘, 바람)
+
+- <a href="https://www.data.go.kr/data/15073861/openapi.do">한국환경공단\_에어코리아\_대기오염정보</a>
+
+  - 측정소별 실시간 측정정보 조회(미세먼지, 초미세먼지)
+
+- 각각 3시간, 1시간, 1시간 간격으로 업데이트되는 정보를 20분 간격으로 갱신
+
 ## 배포
 
-- <a href="https://i.kakao.com/docs/getting-started-overview">카카오톡 챗봇 관리자센터</a>
+- 카카오 채널 챗봇
 
 - AWS EC2 - ubuntu 18.04
+
+- <a href="http://pf.kakao.com/_pcjxnb">알콩달콩 인천대 사용해 보기</a>
+
+  <img src="./preview.jpeg" width="70%" />
