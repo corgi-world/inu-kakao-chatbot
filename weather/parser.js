@@ -56,8 +56,14 @@ export const jsonToText = (short, ultraShort, dnsty) => {
   const c2 = checkResponse(ultraShort);
   const c3 = checkResponse(dnsty);
 
-  if (c1 !== "OK" && c2 !== "OK" && c3 !== "OK") {
-    return "error";
+  if (c1 !== "OK") {
+    return "단기예보 " + c1;
+  }
+  if (c2 !== "OK") {
+    return "초단기예보 " + c2;
+  }
+  if (c3 !== "OK") {
+    return "미세먼지 " + c3;
   }
 
   const shortObj = shortToObj(short);
