@@ -125,6 +125,7 @@ function dnstyToObj(json) {
 
 function checkResponse(json) {
   const resultCode = json.data?.response?.header?.resultCode;
+  console.log(resultCode);
   if (resultCode !== "00") return "error header " + resultCode;
 
   const body = json.data?.response?.body;

@@ -8,6 +8,9 @@ export function getWeatherText() {
 export function getCount() {
   return count;
 }
+export function setCount(c) {
+  count = c;
+}
 
 // base_date : 20220301 / base_time : 1400
 const updateWeather = async (
@@ -20,7 +23,7 @@ const updateWeather = async (
   const ultraShort = await call.UltraSrtFcst(ultraShortBasedate, ultraShortBasetime);
   const dnsty = await call.mesureDnsty();
 
-  // console.log(shortBasedate, shortBasetime, ultraShortBasedate, ultraShortBasetime);
+  console.log(shortBasedate, shortBasetime, ultraShortBasedate, ultraShortBasetime);
   weatherText = jsonToText(short, ultraShort, dnsty);
 };
 
