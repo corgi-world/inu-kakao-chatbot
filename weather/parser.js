@@ -22,6 +22,9 @@ const wsdValues = (wsd) => {
 };
 const dnsty10Values = (v) => {
   // 미세먼지
+  if (v == "-") {
+    return "점검 중";
+  }
   if (v <= 30) {
     return "좋음";
   } else if (v <= 80) {
@@ -34,6 +37,9 @@ const dnsty10Values = (v) => {
 };
 const dnsty25Values = (v) => {
   // 초미세먼지
+  if (v == "-") {
+    return "점검 중";
+  }
   if (v <= 15) {
     return "좋음";
   } else if (v <= 35) {
@@ -112,8 +118,8 @@ function dnstyToObj(json) {
 }
 
 function checkResponse(json) {
-  const header = json.data?.response?.header;
-  if (header === "00") return "error header " + header;
+  const resultCode = json.data?.response?.header?.resultCode;
+  if (resultCode !== "00") return "error header " + resultCode;
 
   const body = json.data?.response?.body;
   const items = body?.items;
